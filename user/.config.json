@@ -2,9 +2,9 @@
   "mailer": {
     "host": "example host",
     "port": 00,
-      "auth": {
-        "user": "example user",
-        "pass": "example pass"
-      }
+    "auth": {
+      "user": "example user",
+      "pass": "example pass"
     }
+  }
 }
