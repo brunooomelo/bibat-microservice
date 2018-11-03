@@ -243,8 +243,7 @@ app
 
     jwt.verify(authHeader.split(' ')[1], 'secret', (err, decoded) => {
       if (err) return res.status(301).json({ error: 'Token invalid' })
-      req.tokenAuth = decoded
-      return res.json()
+      return res.json(decoded)
     })
   })
 
