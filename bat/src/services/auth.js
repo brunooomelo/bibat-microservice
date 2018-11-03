@@ -14,6 +14,7 @@ module.exports = async (req, res, next) => {
     }
     axios.defaults.headers.common["Authorization"] = req.headers.authorization;
     let auth = await axios.post("http://localhost:3000/release");
+    req.owner = auth.data.user;
     next();
   } catch (error) {
     return res.status(301).json({ error: "Token invalid" });
