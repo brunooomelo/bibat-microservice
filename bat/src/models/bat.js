@@ -17,7 +17,10 @@ const batSchema = new mongoose.Schema(
     },
     owner: Object,
     file: Object,
-    star: Number
+    star: {
+      type: Number,
+      default: 0
+    }
   },
   {
     timestamps: {
