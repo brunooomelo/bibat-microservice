@@ -185,11 +185,11 @@ app
         },
         err => {
           if (err) {
-            return res.status(400).send({
+            return res.status(400).json({
               error: 'cannot send forgot password email'
             })
           }
-          return res.send()
+          return res.json()
         }
       )
     } catch (error) {
@@ -207,16 +207,16 @@ app
       }).select('+passwordResetToken +passwordResetExpires')
 
       if (!user) {
-        return res.status(400).send({ error: 'User not found' })
+        return res.status(400).json({ error: 'User not found' })
       }
       if (token !== user.passwordResetToken) {
-        return res.status(400).send({ error: 'Token invalid' })
+        return res.status(400).json({ error: 'Token invalid' })
       }
 
       const now = new Date()
 
       if (now > user.passwordResetExpires) {
-        return res.status(400).send({ error: 'Token expirou, gera um novo' })
+        return res.status(400).json({ error: 'Token expirou, gera um novo' })
       }
       user.password = password
       user.passwordResetToken = undefined
@@ -225,8 +225,27 @@ app
       await user.save()
       res.send({ message: 'Senha alterada com sucesso' })
     } catch (e) {
-      res.status(400).send({ error: 'cannot reset password, try agian' })
+      res.status(400).json({ error: 'cannot reset password, try agian' })
     }
+  })
+  // liberando auth de outros modulos
+  .post('/release', async (req, res) => {
+    const authHeader = req.headers.authorization
+    if (!authHeader) {
+      return res.status(401).json({ error: 'No token provided' })
+    }
+    if (authHeader.split(' ').length !== 2) {
+      return res.status(401).json({ error: 'Token error' })
+    }
+    if (!/^Bearer$/i.test(authHeader.split(' ')[0])) {
+      return res.status(401).json({ error: 'Token malformatted' })
+    }
+
+    jwt.verify(authHeader.split(' ')[1], 'secret', (err, decoded) => {
+      if (err) return res.status(301).json({ error: 'Token invalid' })
+      req.tokenAuth = decoded
+      return res.json()
+    })
   })
 
 app.listen('3000', () => {
