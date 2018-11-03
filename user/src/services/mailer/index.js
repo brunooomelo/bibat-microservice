@@ -1,8 +1,9 @@
 const nodemail = require('nodemailer')
 const hbs = require('nodemailer-express-handlebars')
 const path = require('path')
+const config = require('../../../.config.json')
 
-const transport = nodemail.createTransport()
+const transport = nodemail.createTransport(config)
 
 transport.use(
   'compile',
