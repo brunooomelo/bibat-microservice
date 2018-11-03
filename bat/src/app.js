@@ -8,12 +8,16 @@ const app = express();
 app.use(express.json());
 
 app.get("/bat", middle, async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-  const data = await Bat.paginate({
-    page: parseInt(page),
-    limit: parseInt(limit)
-  });
-  res.json({ bat: data });
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const data = await Bat.paginate({
+      page: parseInt(page),
+      limit: parseInt(limit)
+    });
+    res.json({ bat: data });
+  } catch (e) {
+    res.status(400).json({ bat: data });
+  }
 });
 
 app.get("/bat/:id", middle, async (req, res) => {
@@ -23,8 +27,14 @@ app.get("/bat/:id", middle, async (req, res) => {
 });
 
 app.post("/bat", middle, Upload.single("file"), async (req, res) => {
-  let data = new Bat({ ...req.body, file: { ...req.file }, star: 0 });
-  res.json({ data: data.save() });
+  try {
+    await Bat.create({
+      ...req.body,
+      file: { ...req.file },
+      owner: req.owner
+    });
+    res.json({ message: "arquivo cadastrado" });
+  } catch (error) {}
 });
 
 app.post("/bat/:id/star", middle, async (req, res) => {
