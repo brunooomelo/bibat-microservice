@@ -1,26 +1,32 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate");
 
-const batSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
+const batSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true
+    },
+    subtitle: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    owner: Object,
+    file: Object,
+    star: Number
   },
-  subtitle: {
-    type: String,
-    required: true
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  owner: Object,
-  file: Object,
-  star: Number
-},{
-  timestamps: {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+  {
+    timestamps: {
+      createdAt: "created_at",
+      updatedAt: "updated_at"
+    }
   }
-})
+);
 
-module.exports = mongoose.model('bat', batSchema);
+batSchema.plugin(mongoosePaginate);
+
+module.exports = mongoose.model("bat", batSchema);
