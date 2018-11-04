@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const { JWTSECRET } = require('../../../../.config')
 
 module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization
@@ -13,7 +14,7 @@ module.exports = (req, res, next) => {
     return res.status(401).json({ error: 'Token malformatted' })
   }
 
-  jwt.verify(authHeader.split(' ')[1], 'secret', (err, decoded) => {
+  jwt.verify(authHeader.split(' ')[1], JWTSECRET, (err, decoded) => {
     if (err) return res.status(301).json({ error: 'Token invalid' })
     req.tokenAuth = decoded
     return next()

@@ -1,8 +1,9 @@
 const express = require('express')
+const path = require('path')
 const { Upload } = require('./config/multer')
 const Bat = require('./models/bat')
 const middle = require('./services/auth')
-const path = require('path')
+const { bat } = require('../../.config')
 require('./config/database')
 const app = express()
 
@@ -62,10 +63,7 @@ app
     try {
       const { id } = req.params
       const { file } = await Bat.findOne({ _id: id })
-      res.download(
-        path.join(path.resolve('./'), '/uploads', file.filename),
-        file.originalname
-      )
+      res.download(path.join(bat.folder, file.filename), file.originalname)
     } catch (error) {
       res.json({ error: error.message, type: error.name })
     }

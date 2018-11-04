@@ -6,6 +6,7 @@ const middle = require('./services/middleware/auth')
 const cors = require('cors')
 const crypto = require('crypto')
 const mailer = require('./services/mailer/')
+const { JWTSECRET } = require('../../.config')
 require('./config/database')
 
 const app = express()
@@ -30,7 +31,7 @@ app
     res.json({ user: data })
   })
   // criacao de usuario
-  .post('/user', middle, async (req, res) => {
+  .post('/user', async (req, res) => {
     try {
       if (!req.body.email) {
         res.json({ error: 'params email é requirido' })
@@ -88,7 +89,7 @@ app
         return res.status(406).json({ error: 'token is missing' })
       }
       let token = req.headers.authorization.split(' ')
-      jwt.verify(token[1], 'secret', { ignoreExpiration: true }, function (
+      jwt.verify(token[1], JWTSECRET, { ignoreExpiration: true }, function (
         err,
         decoded
       ) {
@@ -98,7 +99,7 @@ app
         return res.status(201).json({
           token: jwt.sign(
             { username: decoded.username, email: decoded.email },
-            'secret',
+            JWTSECRET,
             { expiresIn: '3m' }
           )
         })
@@ -138,7 +139,7 @@ app
         }
         user.password = undefined
         return res.status(201).json({
-          token: jwt.sign({ user }, 'secret')
+          token: jwt.sign({ user }, JWTSECRET)
         })
       } catch (error) {
         res.json(error)
@@ -241,8 +242,12 @@ app
       return res.status(401).json({ error: 'Token malformatted' })
     }
 
-    jwt.verify(authHeader.split(' ')[1], 'secret', (err, decoded) => {
+    jwt.verify(authHeader.split(' ')[1], JWTSECRET, async (err, decoded) => {
       if (err) return res.status(301).json({ error: 'Token invalid' })
+      const data = await User.findOne({ _id: decoded.user._id })
+      if (!data || !data.isActive) {
+        return res.status(400)
+      }
       return res.json(decoded)
     })
   })
