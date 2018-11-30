@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { user } = require('../../../.config')
+const { user } = require('../../.config')
 
 const URL = `mongodb://${user.DBURL}/${user.DBNAME}`
 const options = {

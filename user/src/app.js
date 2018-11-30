@@ -6,7 +6,7 @@ const middle = require('./services/middleware/auth')
 const cors = require('cors')
 const crypto = require('crypto')
 const mailer = require('./services/mailer/')
-const { JWTSECRET } = require('../../.config')
+const { JWTSECRET } = require('../.config')
 require('./config/database')
 
 const app = express()

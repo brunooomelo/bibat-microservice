@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { bat } = require('../../../.config')
+const { bat } = require('../../.config')
 
 const URL = `mongodb://${bat.DBURL}/${bat.DBNAME}`
 const options = {

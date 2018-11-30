@@ -3,7 +3,7 @@ const path = require('path')
 const { Upload } = require('./config/multer')
 const Bat = require('./models/bat')
 const middle = require('./services/auth')
-const { bat } = require('../../.config')
+const { bat } = require('../.config')
 require('./config/database')
 const app = express()
 
@@ -69,4 +69,4 @@ app
     }
   })
 
-app.listen('3001', () => console.log('server listering in port 3001'))
+app.listen(bat.PORT, () => console.log('server listering in port ' + bat.PORT))

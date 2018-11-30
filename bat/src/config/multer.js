@@ -2,7 +2,7 @@ const multer = require('multer')
 const crypto = require('crypto')
 const path = require('path')
 const { promisify } = require('util')
-const { bat } = require('../../../.config')
+const { bat } = require('../../.config')
 
 const image = promisify(crypto.pseudoRandomBytes)
 
